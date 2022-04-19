@@ -4,7 +4,7 @@ FROM alpine:3.11 as builder
 RUN apk add --no-cache \
         bash curl \
         bsd-compat-headers c-ares-dev linux-headers \
-        build-base git ninja python2 python3
+        build-base git ninja python2 python3 libexecinfo-dev c-ares-dev
 
 # Default to python2 because our build system is ancient.
 RUN ln -sf python2 /usr/bin/python
@@ -35,7 +35,7 @@ RUN ninja -C src/out/Release
 
 # Copy only result binaries to our final image.
 FROM alpine:3.11
-RUN apk add --no-cache libstdc++ python
+RUN apk add --no-cache libstdc++ python libexecinfo-dev c-ares-dev
 COPY --from=builder /shaka_packager/src/out/Release/packager \
                     /shaka_packager/src/out/Release/mpd_generator \
                     /shaka_packager/src/out/Release/pssh-box.py \
